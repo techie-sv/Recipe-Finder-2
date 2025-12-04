@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder - Veg & Non-Veg Delights</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 2.5rem;
+        }
+
+        .filter-btn {
+            padding: 12px 28px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-btn.active {
+            border-color: #ff6b6b;
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .veg-btn.active {
+            border-color: #4CAF50;
+            background-color: #4CAF50;
+        }
+
+        .chicken-btn.active {
+            border-color: #ff9800;
+            background-color: #ff9800;
+        }
+
+        .mutton-btn.active {
+            border-color: #795548;
+            background-color: #795548;
+        }
+
+        .fish-btn.active {
+            border-color: #2196F3;
+            background-color: #2196F3;
+        }
+
+        .recipe-count {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .recipe-count span {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .recipe-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .recipe-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .recipe-content {
+            padding: 1.5rem;
+        }
+
+        .recipe-category {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .category-veg {
+            background-color: #4CAF50;
+        }
+
+        .category-chicken {
+            background-color: #ff9800;
+        }
+
+        .category-mutton {
+            background-color: #795548;
+        }
+
+        .category-fish {
+            background-color: #2196F3;
+        }
+
+        .recipe-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .recipe-desc {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .recipe-details {
+            display: none;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            margin-top: 2rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .recipe-details.active {
+            display: block;
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-details {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .details-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .details-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .details-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .details-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-btn {
+                width: 80%;
+                justify-content: center;
+            }
+        }
+
+        .ingredients-list, .instructions-list {
+            background-color: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        h3 {
+            margin-bottom: 1rem;
+            color: #ff6b6b;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 5px;
+        }
+
+        ul, ol {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .no-recipes {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        #searchInput {
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 50px;
+            border: 2px solid #ddd;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1><i class="fas fa-utensils"></i> Recipe Finder</h1>
+            <p class="tagline">Discover delicious veg and non-veg recipes featuring chicken, mutton, and fish</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for recipes by name or ingredient...">
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">
+                <i class="fas fa-layer-group"></i> All Recipes
+            </button>
+            <button class="filter-btn veg-btn" data-filter="veg">
+                <i class="fas fa-leaf"></i> Vegetarian
+            </button>
+            <button class="filter-btn chicken-btn" data-filter="chicken">
+                <i class="fas fa-drumstick-bite"></i> Chicken
+            </button>
+            <button class="filter-btn mutton-btn" data-filter="mutton">
+                <i class="fas fa-hamburger"></i> Mutton
+            </button>
+            <button class="filter-btn fish-btn" data-filter="fish">
+                <i class="fas fa-fish"></i> Fish
+            </button>
+        </div>
+
+        <div class="recipe-count">
+            Showing <span id="count">12</span> recipes
+        </div>
+
+        <div class="recipes-grid" id="recipesContainer">
+            <!-- Recipes will be dynamically inserted here -->
+        </div>
+
+        <div class="recipe-details" id="recipeDetails">
+            <!-- Recipe details will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>Recipe Finder &copy; 2025 | Delicious Veg & Non-Veg Recipes</p>
+        <p>Made with <i class="fas fa-heart" style="color:#ff6b6b;"></i> for food lovers</p>
+    </footer>
+
+    <script>
+        // Recipe Data
+        const recipes = [
+            {
+                id: 1,
+                title: "Paneer Butter Masala",
+                category: "veg",
+                image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "A rich and creamy North Indian dish with soft paneer cubes in a tomato-based gravy.",
+                time: "40 min",
+                difficulty: "Medium",
+                ingredients: [
+                    "250g paneer, cubed",
+                    "2 large tomatoes, pureed",
+                    "1 large onion, finely chopped",
+                    "2 tbsp butter",
+                    "1 tsp ginger-garlic paste",
+                    "1 tsp garam masala",
+                    "1 tsp red chili powder",
+                    "1/2 cup fresh cream",
+                    "Salt to taste",
+                    "Fresh coriander for garnish"
+                ],
+                instructions: [
+                    "Heat butter in a pan and sauté onions until golden brown.",
+                    "Add ginger-garlic paste and cook for 1 minute.",
+                    "Add tomato puree and cook until oil separates.",
+                    "Add spices and cook for 2-3 minutes.",
+                    "Add paneer cubes and mix gently.",
+                    "Add cream and simmer for 5 minutes.",
+                    "Garnish with fresh coriander and serve hot."
+                ]
+            },
+            {
+                id: 2,
+                title: "Butter Chicken",
+                category: "chicken",
+                image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "A classic creamy and mildly spiced chicken curry that's loved worldwide.",
+                time: "50 min",
+                difficulty: "Medium",
+                ingredients: [
+                    "500g chicken, boneless pieces",
+                    "1 cup tomato puree",
+                    "1/2 cup fresh cream",
+                    "2 tbsp butter",
+                    "1 tbsp ginger-garlic paste",
+                    "1 tsp kasuri methi",
+                    "1 tsp garam masala",
+                    "1 tsp red chili powder",
+                    "1/2 tsp turmeric powder",
+                    "Salt to taste",
+                    "Fresh coriander for garnish"
+                ],
+                instructions: [
+                    "Marinate chicken with yogurt and spices for 30 minutes.",
+                    "Grill or pan-fry the chicken until cooked.",
+                    "In a pan, melt butter and add ginger-garlic paste.",
+                    "Add tomato puree and cook until oil separates.",
+                    "Add spices and cream, simmer for 5 minutes.",
+                    "Add cooked chicken pieces and simmer for 10 minutes.",
+                    "Garnish with fresh cream and coriander."
+                ]
+            },
+            {
+                id: 3,
+                title: "Mutton Rogan Josh",
+                category: "mutton",
+                image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Aromatic Kashmiri mutton curry with rich flavors and tender meat.",
+                time: "90 min",
+                difficulty: "Hard",
+                ingredients: [
+                    "1 kg mutton, bone-in pieces",
+                    "2 large onions, sliced",
+                    "2 tbsp ghee or oil",
+                    "1 tbsp ginger-garlic paste",
+                    "2 tsp Kashmiri red chili powder",
+                    "1 tsp fennel powder",
+                    "1/2 tsp asafoetida",
+                    "2 cups yogurt, whisked",
+                    "Whole spices: 2 bay leaves, 4 green cardamoms, 1 cinnamon stick",
+                    "Salt to taste"
+                ],
+                instructions: [
+                    "Heat ghee in a pressure cooker, add whole spices.",
+                    "Add onions and sauté until golden brown.",
+                    "Add ginger-garlic paste and cook for 2 minutes.",
+                    "Add mutton pieces and brown on all sides.",
+                    "Add all spices and yogurt, mix well.",
+                    "Add 1 cup water and pressure cook for 6-7 whistles.",
+                    "Simmer until gravy thickens, garnish with fresh coriander."
+                ]
+            },
+            {
+                id: 4,
+                title: "Grilled Lemon Fish",
+                category: "fish",
+                image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Light and healthy grilled fish with lemon and herb marinade.",
+                time: "30 min",
+                difficulty: "Easy",
+                ingredients: [
+                    "4 fish fillets (salmon or sea bass)",
+                    "Juice of 2 lemons",
+                    "3 tbsp olive oil",
+                    "3 garlic cloves, minced",
+                    "1 tsp dried oregano",
+                    "1 tsp paprika",
+                    "Fresh parsley, chopped",
+                    "Salt and pepper to taste",
+                    "Lemon slices for garnish"
+                ],
+                instructions: [
+                    "In a bowl, mix lemon juice, olive oil, garlic, and herbs.",
+                    "Marinate fish fillets for 20-30 minutes.",
+                    "Preheat grill to medium-high heat.",
+                    "Grill fish for 4-5 minutes on each side.",
+                    "Baste with remaining marinade while grilling.",
+                    "Garnish with fresh parsley and lemon slices.",
+                    "Serve with steamed vegetables or rice."
+                ]
+            },
+            {
+                id: 5,
+                title: "Vegetable Biryani",
+                category: "veg",
+                image: "https://images.unsplash.com/photo-1585937421612-70ca003675ed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+
+                description: "Fragrant basmati rice cooked with mixed vegetables and aromatic spices.",
+                time: "60 min",
+                difficulty: "Medium",
+                ingredients: [
+                    "2 cups basmati rice, soaked",
+                    "2 cups mixed vegetables (carrots, peas, beans, cauliflower)",
+                    "1 large onion, sliced",
+                    "1/2 cup yogurt",
+                    "2 tbsp biryani masala",
+                    "Whole spices: bay leaves, cardamom, cloves, cinnamon",
+                    "Saffron strands soaked in milk",
+                    "Fresh mint and coriander leaves",
+                    "Ghee or oil for cooking",
+                    "Salt to taste"
+                ],
+                instructions: [
+                    "Parboil rice with whole spices, drain and set aside.",
+                    "In a pan, sauté onions until golden brown.",
+                    "Add vegetables and biryani masala, cook for 5 minutes.",
+                    "Layer rice and vegetable mixture in a heavy-bottomed pot.",
+                    "Add saffron milk and ghee between layers.",
+                    "Cover and cook on low heat for 20-25 minutes.",
+                    "Garnish with fried onions and fresh herbs before serving."
+                ]
+            },
+            {
+                id: 6,
+                title: "Chicken Tikka Masala",
+                category: "chicken",
+                image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Tender chicken tikka pieces in a rich, creamy tomato-based curry.",
+                time: "55 min",
+                difficulty: "Medium",
+                ingredients: [
+                    "500g chicken tikka pieces",
+                    "1 cup tomato puree",
+                    "1/2 cup heavy cream",
+                    "1 onion, finely chopped",
+                    "2 tbsp tikka masala paste",
+                    "1 tbsp oil",
+                    "1 tsp sugar",
+                    "1 tsp kasuri methi",
+                    "Fresh coriander for garnish",
+                    "Salt to taste"
+                ],
+                instructions: [
+                    "Marinate chicken with yogurt and spices for 2 hours.",
+                    "Grill or bake chicken until cooked through.",
+                    "In a pan, sauté onions until soft and translucent.",
+                    "Add tikka masala paste and cook for 2 minutes.",
+                    "Add tomato puree and simmer for 10 minutes.",
+                    "Add cream and cooked chicken, simmer for 5 minutes.",
+                    "Add kasuri methi and garnish with fresh coriander."
+                ]
+            },
+            {
+                id: 7,
+                title: "Mutton Korma",
+                category: "mutton",
+                image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Mild and creamy mutton curry with yogurt and nut-based gravy.",
+                time: "80 min",
+                difficulty: "Hard",
+                ingredients: [
+                    "1 kg mutton, bone-in pieces",
+                    "1 cup yogurt, whisked",
+                    "1/2 cup fried onions, ground to paste",
+                    "2 tbsp poppy seeds, soaked",
+                    "2 tbsp cashew nuts, soaked",
+                    "1 tbsp ginger-garlic paste",
+                    "Whole spices: cardamom, cloves, cinnamon",
+                    "1/2 cup cream",
+                    "Saffron strands",
+                    "Salt to taste"
+                ],
+                instructions: [
+                    "Heat ghee in a pressure cooker, add whole spices.",
+                    "Add mutton and brown on all sides.",
+                    "Add ginger-garlic paste and cook for 2 minutes.",
+                    "Add yogurt, fried onion paste, and ground nuts.",
+                    "Add water and pressure cook for 6-7 whistles.",
+                    "Open lid, add cream and saffron, simmer for 10 minutes.",
+                    "Garnish with fried nuts and serve hot."
+                ]
+            },
+            {
+                id: 8,
+                title: "Fish Curry",
+                category: "fish",
+                image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Traditional South Indian fish curry with coconut and tamarind.",
+                time: "45 min",
+                difficulty: "Medium",
+                ingredients: [
+                    "500g fish pieces (kingfish or pomfret)",
+                    "1 cup grated coconut",
+                    "2 tbsp tamarind pulp",
+                    "1 onion, chopped",
+                    "2 tomatoes, chopped",
+                    "2 tsp red chili powder",
+                    "1 tsp turmeric powder",
+                    "Curry leaves",
+                    "Mustard seeds for tempering",
+                    "Salt to taste"
+                ],
+                instructions: [
+                    "Soak tamarind in warm water and extract pulp.",
+                    "Grind coconut with spices to make a smooth paste.",
+                    "In a clay pot or pan, heat oil and temper mustard seeds.",
+                    "Add onions and curry leaves, sauté until golden.",
+                    "Add tomatoes and cook until soft.",
+                    "Add ground paste and tamarind water, simmer for 10 minutes.",
+                    "Add fish pieces and cook gently for 8-10 minutes.",
+                    "Garnish with fresh curry leaves."
+                ]
+            },
+            {
+                id: 9,
+                title: "Palak Paneer",
+                category: "veg",
+                image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Soft paneer cubes in a smooth spinach gravy with mild spices.",
+                time: "35 min",
+                difficulty: "Easy",
+                ingredients: [
+                    "250g paneer, cubed",
+                    "3 cups fresh spinach leaves",
+                    "1 onion, chopped",
+                    "2 tomatoes, chopped",
+                    "1 green chili",
+                    "1 tsp cumin seeds",
+                    "1 tsp garam masala",
+                    "2 tbsp cream",
+                    "Salt to taste",
+                    "Ginger-garlic paste"
+                ],
+                instructions: [
+                    "Blanch spinach leaves in boiling water for 2 minutes.",
+                    "Grind spinach with green chili to make a puree.",
+                    "Heat oil in a pan, add cumin seeds.",
+                    "Add onions and sauté until golden.",
+                    "Add ginger-garlic paste and tomatoes, cook until soft.",
+                    "Add spinach puree and spices, cook for 5 minutes.",
+                    "Add paneer cubes and cream, simmer for 5 minutes.",
+                    "Serve hot with naan or rice."
+                ]
+            },
+            {
+                id: 10,
+                title: "Chicken Biryani",
+                category: "chicken",
+                image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Fragrant basmati rice layered with marinated chicken and aromatic spices.",
+                time: "70 min",
+                difficulty: "Hard",
+                ingredients: [
+                    "500g chicken, bone-in pieces",
+                    "2 cups basmati rice, soaked",
+                    "2 onions, sliced",
+                    "1 cup yogurt",
+                    "2 tbsp biryani masala",
+                    "Whole spices: bay leaves, cardamom, cloves",
+                    "Saffron milk",
+                    "Fresh mint and coriander",
+                    "Ghee for cooking",
+                    "Salt to taste"
+                ],
+                instructions: [
+                    "Marinate chicken with yogurt and spices for 2 hours.",
+                    "Parboil rice with whole spices until 70% cooked.",
+                    "In a heavy-bottomed pot, layer rice and chicken.",
+                    "Add fried onions, mint, and coriander between layers.",
+                    "Drizzle saffron milk and ghee on top.",
+                    "Cover and cook on low heat for 30 minutes.",
+                    "Let it rest for 10 minutes before serving."
+                ]
+            },
+            {
+                id: 11,
+                title: "Mutton Curry",
+                category: "mutton",
+                image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Spicy and flavorful mutton curry cooked with traditional Indian spices.",
+                time: "75 min",
+                difficulty: "Medium",
+                ingredients: [
+                    "1 kg mutton, bone-in pieces",
+                    "3 onions, finely chopped",
+                    "3 tomatoes, pureed",
+                    "2 tbsp ginger-garlic paste",
+                    "2 tbsp coriander powder",
+                    "1 tbsp cumin powder",
+                    "2 tsp red chili powder",
+                    "1/2 cup oil",
+                    "Fresh coriander for garnish",
+                    "Salt to taste"
+                ],
+                instructions: [
+                    "Heat oil in a pressure cooker, add onions.",
+                    "Sauté until golden brown, add ginger-garlic paste.",
+                    "Add mutton pieces and brown on all sides.",
+                    "Add all dry spices and cook for 5 minutes.",
+                    "Add tomato puree and cook until oil separates.",
+                    "Add water and pressure cook for 5-6 whistles.",
+                    "Garnish with fresh coriander and serve hot."
+                ]
+            },
+            {
+                id: 12,
+                title: "Fish Fry",
+                category: "fish",
+                image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                description: "Crispy fried fish marinated with spices and coated in semolina.",
+                time: "25 min",
+                difficulty: "Easy",
+                ingredients: [
+                    "4 fish fillets or slices",
+                    "2 tbsp red chili powder",
+                    "1 tbsp turmeric powder",
+                    "2 tbsp lemon juice",
+                    "1 cup semolina (rava)",
+                    "Oil for frying",
+                    "Salt to taste",
+                    "Curry leaves for garnish"
+                ],
+                instructions: [
+                    "Clean fish and make shallow cuts on both sides.",
+                    "Marinate with chili powder, turmeric, lemon juice, and salt.",
+                    "Let it marinate for 15-20 minutes.",
+                    "Coat each piece with semolina.",
+                    "Heat oil in a pan, fry fish until golden brown on both sides.",
+                    "Add curry leaves to the oil for extra flavor.",
+                    "Drain on paper towels and serve hot."
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const recipesContainer = document.getElementById('recipesContainer');
+        const recipeDetails = document.getElementById('recipeDetails');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('searchInput');
+        const countElement = document.getElementById('count');
+
+        // Initialize with all recipes
+        let filteredRecipes = [...recipes];
+        let currentFilter = 'all';
+
+        // Render recipes
+        function renderRecipes(recipesToRender) {
+            recipesContainer.innerHTML = '';
+            
+            if (recipesToRender.length === 0) {
+                recipesContainer.innerHTML = '<div class="no-recipes"><i class="fas fa-search"></i><h3>No recipes found</h3><p>Try a different filter or search term</p></div>';
+                countElement.textContent = '0';
+                return;
+            }
+            
+            recipesToRender.forEach(recipe => {
+                const categoryClass = `category-${recipe.category}`;
+                const categoryText = recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1);
+                
+                const recipeCard = document.createElement('div');
+                recipeCard.className = 'recipe-card';
+                recipeCard.innerHTML = `
+                    <img src="${recipe.image}" alt="${recipe.title}" class="recipe-img">
+                    <div class="recipe-content">
+                        <span class="recipe-category ${categoryClass}">${categoryText}</span>
+                        <h3 class="recipe-title">${recipe.title}</h3>
+                        <p class="recipe-desc">${recipe.description}</p>
+                        <div class="recipe-meta">
+                            <span><i class="far fa-clock"></i> ${recipe.time}</span>
+                            <span><i class="fas fa-signal"></i> ${recipe.difficulty}</span>
+                        </div>
+                    </div>
+                `;
+                
+                recipeCard.addEventListener('click', () => showRecipeDetails(recipe));
+                recipesContainer.appendChild(recipeCard);
+            });
+            
+            countElement.textContent = recipesToRender.length;
+        }
+
+        // Show recipe details
+        function showRecipeDetails(recipe) {
+            const categoryClass = `category-${recipe.category}`;
+            const categoryText = recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1);
+            
+            recipeDetails.innerHTML = `
+                <div class="details-header">
+                    <div>
+                        <span class="recipe-category ${categoryClass}">${categoryText}</span>
+                        <h2 class="details-title">${recipe.title}</h2>
+                        <p>${recipe.description}</p>
+                    </div>
+                    <button class="close-details" id="closeDetails">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <img src="${recipe.image}" alt="${recipe.title}" class="details-img">
+                <div class="details-content">
+                    <div class="ingredients-list">
+                        <h3><i class="fas fa-shopping-basket"></i> Ingredients</h3>
+                        <ul>
+                            ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="instructions-list">
+                        <h3><i class="fas fa-list-ol"></i> Instructions</h3>
+                        <ol>
+                            ${recipe.instructions.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                </div>
+                <div class="recipe-meta" style="margin-top: 1.5rem;">
+                    <span><i class="far fa-clock"></i> Prep & Cook Time: ${recipe.time}</span>
+                    <span><i class="fas fa-signal"></i> Difficulty: ${recipe.difficulty}</span>
+                </div>
+            `;
+            
+            recipeDetails.classList.add('active');
+            document.getElementById('closeDetails').addEventListener('click', () => {
+                recipeDetails.classList.remove('active');
+            });
+            
+            // Scroll to details
+            recipeDetails.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Filter recipes
+        function filterRecipes(filter, searchTerm = '') {
+            currentFilter = filter;
+            
+            let result = recipes;
+            
+            // Apply category filter
+            if (filter !== 'all') {
+                result = result.filter(recipe => recipe.category === filter);
+            }
+            
+            // Apply search filter
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                result = result.filter(recipe => 
+                    recipe.title.toLowerCase().includes(term) ||
+                    recipe.description.toLowerCase().includes(term) ||
+                    recipe.ingredients.some(ing => ing.toLowerCase().includes(term))
+                );
+            }
+            
+            filteredRecipes = result;
+            renderRecipes(filteredRecipes);
+            
+            // Update active filter button
+            filterButtons.forEach(btn => {
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Event listeners for filter buttons
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const filter = button.dataset.filter;
+                filterRecipes(filter, searchInput.value);
+            });
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            filterRecipes(currentFilter, e.target.value);
+        });
+
+        // Initial render
+        renderRecipes(recipes);
+    </script>
+</body>
+</html>
